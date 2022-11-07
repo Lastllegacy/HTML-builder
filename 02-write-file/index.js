@@ -10,10 +10,14 @@ const txtFileDir = path.join(__dirname, "text.txt");
 let consoleMessage = '';
 
 const consoleQuest = () => {
-   rl.question("Hello :) Write here to test the function\n" , answer => {
+   rl.question("Hello! Write something to test the function\n" , answer => {
+
+   process.on('beforeExit', () => {
+      console.log('Goodbye! See you next time :)');
+   })
+
    try {
-      if(answer.includes('exit'))  {
-         console.log('Goodbye! See you next time ;)')
+      if(answer.includes('exit') )  {
          rl.close()
       } else {
          consoleMessage += answer;
@@ -31,3 +35,5 @@ const consoleQuest = () => {
 }
 
 consoleQuest()
+
+
