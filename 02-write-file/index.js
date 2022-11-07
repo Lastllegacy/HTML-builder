@@ -1,21 +1,34 @@
 const fs = require("fs");
-const path = require('node:path');
+const path = require("node:path");
 const { stdin: input, stdout: output } = require("node:process");
-const readline = require('node:readline')
+const readline = require('node:readline');
+// const { stdin } = require("process");
 
-const rl = readline.createInterface({input, output})
+const rl = readline.createInterface({input, output});
 
-const userTxt = await rl.question("Hello, please enter some text to see how write to file works \n" , (answer) => {
+const txtFileDir = path.join(__dirname, "text.txt");
+
+let consoleMessage = '';
+
+const consoleQuest = () => {
+   rl.question("Hello :) Write here to test the function\n" , answer => {
    try {
-      rl.close()
-      return answer
+      if(answer.includes('exit'))  {
+         console.log('Goodbye! See you next time ;)')
+         rl.close()
+      } else {
+         consoleMessage += answer;
+         fs.writeFile(txtFileDir, consoleMessage, (err) => {
+            if(err) throw err;
+         })
+         consoleQuest()
+      }
+      
    } catch (err) {
       throw err
    }
+
 })
+}
 
-console.log(userTxt);
-
-// fs.writeFile('text.txt', userTxt, (err) => {
-//    if(err) throw err;
-// })
+consoleQuest()
