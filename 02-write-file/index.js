@@ -1,39 +1,29 @@
 const fs = require("fs");
 const path = require("node:path");
-const { stdin: input, stdout: output } = require("node:process");
-const readline = require('node:readline');
+const { stdin, stdout } = require("process");
 
-const rl = readline.createInterface({input, output});
+// const rl = readline.createInterface({input, output});
 
 const txtFileDir = path.join(__dirname, "text.txt");
 
-let consoleMessage = '';
+const writing = fs.createWriteStream(txtFileDir)
 
-const consoleQuest = () => {
-   rl.question("Hello! Write something to test the function\n" , answer => {
 
-   process.on('beforeExit', () => {
-      console.log('Goodbye! See you next time :)');
-   })
+stdin.on('data', (chunk) => {
+   const stringedChunk = chunk.toString();
 
-   try {
-      if(answer.includes('exit') )  {
-         rl.close()
-      } else {
-         consoleMessage += answer;
-         fs.writeFile(txtFileDir, consoleMessage, (err) => {
-            if(err) throw err;
-         })
-         consoleQuest()
-      }
-      
-   } catch (err) {
-      throw err
-   }
+   if(stringedChunk.match('exit')) return process.exit()
 
+   writing.write(stringedChunk)
 })
-}
 
-consoleQuest()
+writing.on('error' , (err) => {
+   if(err) throw err;
+})
+
+process.on('exit' , () => stdout.write('Bye see you next time.'))
+process.on('SIGINT', () => process.exit());
+
+stdout.write('Hello! Type something here, to test the function!\n')
 
 
