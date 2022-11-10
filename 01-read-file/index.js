@@ -5,9 +5,9 @@ const txtDir = path.join(__dirname, '/text.txt')
 
 const stream = new fs.ReadStream(txtDir, {encoding:'utf-8'});
 
-stream.on('readable', () => {
-   const data = stream.read();
-   console.log(data)
+fs.readFile(txtDir, (err,data) => {
+   if(err) throw err;
+   console.log(data.toString());
 })
 
 stream.on('error' , (err) => {
